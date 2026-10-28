@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jumpscare Lucu!</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;text-align:center;
+  font-family:Arial,sans-serif;background:#111;color:white;
+  overflow:hidden;transition:background .1s;
+}
+#face{font-size:30vw;display:none}
+h1{font-size:clamp(28px,7vw,48px)}
+p{padding:0 20px}
+button{
+  padding:14px 22px;border:0;border-radius:12px;
+  background:#ffca28;color:#111;font-weight:bold;font-size:18px;
+}
+#hint{font-size:14px;color:#ccc}
+</style>
+</head>
+<body>
+<h1 id="title">😈 Siap-siap...</h1>
+<p id="hint">Tunggu sebentar...</p>
+<div id="face">🤪</div>
+<button id="sound" hidden>Aktifkan suara 🔊</button>
+<script>
+setTimeout(()=>{
+ document.body.style.background="#e60026";
+ document.getElementById("title").textContent="JUMPSCARE!!!";
+ document.getElementById("hint").textContent="Kena prank, bro! 😂";
+ document.getElementById("face").style.display="block";
+ document.getElementById("sound").hidden=false;
+ if(navigator.vibrate) navigator.vibrate(180);
+},1800);
+
+document.getElementById("sound").onclick=()=>{
+ const ctx=new (window.AudioContext||window.webkitAudioContext)();
+ const osc=ctx.createOscillator();
+ const gain=ctx.createGain();
+ osc.type="sawtooth";
+ osc.frequency.setValueAtTime(800,ctx.currentTime);
+ osc.frequency.exponentialRampToValueAtTime(180,ctx.currentTime+0.5);
+ gain.gain.setValueAtTime(0.25,ctx.currentTime);
+ gain.gain.exponentialRampToValueAtTime(0.01,ctx.currentTime+0.6);
+ osc.connect(gain);gain.connect(ctx.destination);
+ osc.start();osc.stop(ctx.currentTime+0.6);
+};
+</script>
+</body>
+</html>
